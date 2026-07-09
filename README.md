@@ -67,14 +67,18 @@ Symptom: Transaction timeout. Recent change: Firewall rule modified. Severity: H
 ### File Structure
 
 ```
-registries/industry/digital_war_room.hocon          ← Agent network config
+registries/industry/
+├── manifest.hocon                                  ← Agent manifest
+└── digital_war_room.hocon                          ← Agent network config
 coded_tools/industry/digital_war_room/
 ├── __init__.py
 ├── impact_analysis_tool.py                         ← Blast-radius data
 ├── rca_intelligence_tool.py                        ← Root cause hypotheses
 ├── resolution_runbook_tool.py                      ← Runbook matching
 └── war_room_communication_tool.py                  ← Comms generation
-docs/examples/industry/digital_war_room.md          ← Documentation
+architecture.md                                     ← System architecture
+summary.md                                          ← Project summary
+requirements.txt                                    ← Python dependencies
 ```
 
 ### Author

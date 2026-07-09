@@ -68,16 +68,18 @@ Five autonomous AI agents collaborate through a commander-led workflow:
 
 | File | Purpose |
 |------|---------|
+| `registries/industry/manifest.hocon` | Agent manifest |
 | `registries/industry/digital_war_room.hocon` | Agent network definition (5 agents + 4 tools) |
+| `coded_tools/industry/digital_war_room/__init__.py` | Package init |
 | `coded_tools/industry/digital_war_room/impact_analysis_tool.py` | Synthetic CMDB/APM data |
 | `coded_tools/industry/digital_war_room/rca_intelligence_tool.py` | Synthetic log/change correlation |
 | `coded_tools/industry/digital_war_room/resolution_runbook_tool.py` | Synthetic runbook database |
 | `coded_tools/industry/digital_war_room/war_room_communication_tool.py` | Communication generator |
-| `docs/examples/industry/digital_war_room.md` | User documentation |
-| `_bmad-output/planning-artifacts/digital_war_room_architecture.md` | Full architecture doc |
+| `architecture.md` | Full architecture doc |
+| `summary.md` | Project summary |
 
 ## Author
 
 **Umesh Anjanappa** — Cognizant Technology Solutions  
-Branch: `umesh-hackathon`  
+Branch: `main`  
 Date: July 2026
