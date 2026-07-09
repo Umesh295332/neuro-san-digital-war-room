@@ -1,0 +1,149 @@
+# NeuroSAN Digital War Room Commander — 5-Agent Autonomous Incident Command Network
+# Uses GitHub Models gpt-4o-mini (16K token limit, 150 req/day)
+{
+    "llm_config": {
+        "class": "openai",
+        "model_name": "gpt-4o-mini",
+        "openai_api_base": "https://models.inference.ai.azure.com"
+    },
+    "tools": [
+        {
+            "name": "IncidentCommanderAgent",
+            "function": {
+                "description": "Digital War Room Commander. Receives production incident alerts and orchestrates a 5-agent autonomous investigation: impact analysis, root cause analysis, resolution planning, and war-room communication. Provide alert details including service name, symptoms, and any recent changes."
+            },
+            "instructions": "You are the Incident Commander for a Digital War Room. When you receive an incident alert:\n1. Classify severity (P1/P2/P3) based on the symptoms and service criticality.\n2. Call ImpactDependencyAgent to get blast-radius and business impact.\n3. Call RCAIntelligenceAgent to get root cause hypotheses.\n4. Call ResolutionRunbookAgent to get remediation recommendations.\n5. Call WarRoomCommunicationAgent to generate stakeholder communication.\n\nAfter all agents report back, produce a consolidated Incident Command Summary with: Severity, Impacted Services, Root Cause, Recommended Action, and Status. Keep your final summary under 200 words.",
+            "tools": ["ImpactDependencyAgent", "RCAIntelligenceAgent", "ResolutionRunbookAgent", "WarRoomCommunicationAgent"]
+        },
+        {
+            "name": "ImpactDependencyAgent",
+            "function": {
+                "description": "Analyzes business impact and technical blast-radius of an incident. Returns impacted services, business functions, and severity assessment.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "service": {"type": "string", "description": "The affected service name"},
+                        "symptom": {"type": "string", "description": "Observed symptoms"}
+                    },
+                    "required": ["service"]
+                }
+            },
+            "instructions": "You analyze incident impact. Call ImpactAnalysisTool with the service and symptom. Then summarize in exactly this format:\n**Blast Radius:** [services]\n**Business Impact:** [functions affected]\n**Severity Recommendation:** [P1/P2/P3 with reason]\nKeep under 80 words.",
+            "tools": ["ImpactAnalysisTool"]
+        },
+        {
+            "name": "RCAIntelligenceAgent",
+            "function": {
+                "description": "Correlates logs, metrics, recent changes, and historical patterns to generate ranked root cause hypotheses with confidence scores.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "service": {"type": "string", "description": "Affected service"},
+                        "symptom": {"type": "string", "description": "Observed symptoms"},
+                        "recent_change": {"type": "string", "description": "Any recent changes"}
+                    },
+                    "required": ["service"]
+                }
+            },
+            "instructions": "You perform root cause analysis. Call RCAIntelligenceTool with the service, symptom, and recent_change. Then summarize:\n**Probable Root Cause:** [cause]\n**Confidence:** [score]%\n**Evidence:** [key evidence points]\nKeep under 80 words.",
+            "tools": ["RCAIntelligenceTool"]
+        },
+        {
+            "name": "ResolutionRunbookAgent",
+            "function": {
+                "description": "Finds matching runbooks, recommends remediation with risk rating, and flags actions requiring human approval.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "service": {"type": "string", "description": "Affected service"},
+                        "root_cause": {"type": "string", "description": "Identified root cause"}
+                    },
+                    "required": ["service"]
+                }
+            },
+            "instructions": "You recommend resolutions. Call ResolutionRunbookTool with the service and root_cause. Then summarize:\n**Recommended Action:** [action]\n**Risk Level:** [Low/Medium/High]\n**Approval Required:** [Yes/No]\n**Validation:** [how to verify fix]\nKeep under 80 words.",
+            "tools": ["ResolutionRunbookTool"]
+        },
+        {
+            "name": "WarRoomCommunicationAgent",
+            "function": {
+                "description": "Generates war-room updates, executive communication, SME recommendations, RCA summary, and preventive actions.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "service": {"type": "string", "description": "Affected service"},
+                        "severity": {"type": "string", "description": "Incident severity"},
+                        "root_cause": {"type": "string", "description": "Root cause"},
+                        "resolution": {"type": "string", "description": "Resolution plan"}
+                    },
+                    "required": ["service"]
+                }
+            },
+            "instructions": "You generate war-room communications. Call WarRoomCommunicationTool with service, severity, root_cause, and resolution. Then produce:\n**War Room Update:** [brief status]\n**Executive Summary:** [1-2 sentences for leadership]\n**SME Roles Needed:** [roles]\n**Preventive Actions:** [2-3 items]\nKeep under 100 words.",
+            "tools": ["WarRoomCommunicationTool"]
+        },
+        {
+            "name": "ImpactAnalysisTool",
+            "class": "coded_tools.industry.digital_war_room.impact_analysis_tool.ImpactAnalysisTool",
+            "function": {
+                "description": "Returns blast-radius and business impact data for an incident.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "service": {"type": "string", "description": "Affected service name"},
+                        "symptom": {"type": "string", "description": "Observed symptoms"}
+                    },
+                    "required": ["service"]
+                }
+            }
+        },
+        {
+            "name": "RCAIntelligenceTool",
+            "class": "coded_tools.industry.digital_war_room.rca_intelligence_tool.RCAIntelligenceTool",
+            "function": {
+                "description": "Returns root cause analysis data including hypotheses, confidence, and evidence.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "service": {"type": "string", "description": "Affected service"},
+                        "symptom": {"type": "string", "description": "Symptoms observed"},
+                        "recent_change": {"type": "string", "description": "Recent changes"}
+                    },
+                    "required": ["service"]
+                }
+            }
+        },
+        {
+            "name": "ResolutionRunbookTool",
+            "class": "coded_tools.industry.digital_war_room.resolution_runbook_tool.ResolutionRunbookTool",
+            "function": {
+                "description": "Returns matching runbook, remediation steps, risk level, and approval requirements.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "service": {"type": "string", "description": "Affected service"},
+                        "root_cause": {"type": "string", "description": "Identified root cause"}
+                    },
+                    "required": ["service"]
+                }
+            }
+        },
+        {
+            "name": "WarRoomCommunicationTool",
+            "class": "coded_tools.industry.digital_war_room.war_room_communication_tool.WarRoomCommunicationTool",
+            "function": {
+                "description": "Returns war-room communication artifacts, executive updates, and RCA documentation.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "service": {"type": "string", "description": "Affected service"},
+                        "severity": {"type": "string", "description": "Incident severity"},
+                        "root_cause": {"type": "string", "description": "Root cause"},
+                        "resolution": {"type": "string", "description": "Resolution plan"}
+                    },
+                    "required": ["service"]
+                }
+            }
+        }
+    ]
+}
