@@ -1,0 +1,38 @@
+# Requirements: NeuroSAN Digital War Room Commander
+
+## Python Version
+Python >= 3.10
+
+## Core Dependencies (from neuro-san-studio)
+neuro-san==0.6.67
+nsflow==0.6.16
+leaf-common>=1.2.44
+pyhocon>=0.3.60
+python-dotenv>=1.2.2,<2.0.0
+langchain-openai>=1.1.9,<2.0
+
+## SSL Support
+truststore>=0.10.4
+pip-system-certs>=5.3
+
+## LLM Provider
+# Model: gpt-4o-mini (OpenAI-compatible API)
+
+## Environment Variables Required
+# PYTHONPATH=C:\NSAN\neuro-san-studio
+# AGENT_MANIFEST_FILE=C:\NSAN\neuro-san-studio\registries\manifest.hocon
+# AGENT_TOOL_PATH=C:\NSAN\neuro-san-studio\coded_tools
+
+## No Additional Dependencies
+# The Digital War Room uses only:
+# - Standard Python libraries (typing, datetime)
+# - Neuro SAN framework (already in requirements.txt)
+# - No external API calls from coded tools (all synthetic data)
+# - No database connections
+# - No additional pip packages beyond base neuro-san-studio
+
+## Hardware Requirements
+# - Any machine with Python 3.10+
+# - Internet access to OpenAI-compatible API endpoint
+# - ~50MB disk space
+# - No GPU required (LLM inference is cloud-based)
