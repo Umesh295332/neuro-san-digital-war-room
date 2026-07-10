@@ -1,10 +1,12 @@
 # Copyright 2025-2026 Cognizant Technology Solutions
 """RCA Intelligence Tool - Correlates data to generate root cause hypotheses."""
 
-from typing import Any, Dict
+from typing import Any, Dict, Union
+
+from neuro_san.interfaces.coded_tool import CodedTool
 
 
-class RCAIntelligenceTool:
+class RCAIntelligenceTool(CodedTool):
     """Coded tool that provides synthetic root cause analysis data."""
 
     # Synthetic RCA knowledge base
@@ -35,13 +37,7 @@ class RCAIntelligenceTool:
         },
     }
 
-    def get_function_name(self) -> str:
-        return "RCAIntelligenceTool"
-
-    def get_function_description(self) -> str:
-        return "Returns root cause analysis data including hypotheses, confidence, and evidence."
-
-    def invoke(self, args: Dict[str, Any], _sly_data: Any = None) -> str:
+    async def async_invoke(self, args: Dict[str, Any], sly_data: Dict[str, Any]) -> Union[Dict[str, Any], str]:
         service = args.get("service", "unknown")
         symptom = args.get("symptom", "")
         recent_change = args.get("recent_change", "")

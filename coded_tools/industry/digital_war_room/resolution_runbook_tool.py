@@ -1,10 +1,12 @@
 # Copyright 2025-2026 Cognizant Technology Solutions
 """Resolution & Runbook Tool - Finds matching runbooks and recommends remediation."""
 
-from typing import Any, Dict
+from typing import Any, Dict, Union
+
+from neuro_san.interfaces.coded_tool import CodedTool
 
 
-class ResolutionRunbookTool:
+class ResolutionRunbookTool(CodedTool):
     """Coded tool that provides synthetic runbook and remediation data."""
 
     # Synthetic runbook database
@@ -41,13 +43,7 @@ class ResolutionRunbookTool:
         },
     }
 
-    def get_function_name(self) -> str:
-        return "ResolutionRunbookTool"
-
-    def get_function_description(self) -> str:
-        return "Returns matching runbook, remediation steps, risk level, and approval requirements."
-
-    def invoke(self, args: Dict[str, Any], _sly_data: Any = None) -> str:
+    async def async_invoke(self, args: Dict[str, Any], sly_data: Dict[str, Any]) -> Union[Dict[str, Any], str]:
         service = args.get("service", "unknown")
         root_cause = args.get("root_cause", "").lower()
 

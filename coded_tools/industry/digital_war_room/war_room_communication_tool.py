@@ -1,20 +1,16 @@
 # Copyright 2025-2026 Cognizant Technology Solutions
 """War Room Communication & RCA Tool - Generates stakeholder communication and RCA artifacts."""
 
-from typing import Any, Dict
+from typing import Any, Dict, Union
 from datetime import datetime
 
+from neuro_san.interfaces.coded_tool import CodedTool
 
-class WarRoomCommunicationTool:
+
+class WarRoomCommunicationTool(CodedTool):
     """Coded tool that generates synthetic war-room communications and RCA documentation."""
 
-    def get_function_name(self) -> str:
-        return "WarRoomCommunicationTool"
-
-    def get_function_description(self) -> str:
-        return "Returns war-room communication artifacts, executive updates, and RCA documentation."
-
-    def invoke(self, args: Dict[str, Any], _sly_data: Any = None) -> str:
+    async def async_invoke(self, args: Dict[str, Any], sly_data: Dict[str, Any]) -> Union[Dict[str, Any], str]:
         service = args.get("service", "Unknown Service")
         severity = args.get("severity", "P1")
         root_cause = args.get("root_cause", "Under investigation")
